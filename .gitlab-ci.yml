@@ -10,8 +10,8 @@ build:
     - mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
     - spectool -g zookeeper.spec
     - dnf builddep -y zookeeper.spec
-    - rpmbuild -bs --nodeps --define "_topdir $(pwd)/rpmbuild" --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" zookeeper.spec
-    - rpmbuild --rebuild *.src.rpm
+    - rpmbuild --define "_topdir $(pwd)/rpmbuild" --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" -bs --nodeps zookeeper.spec
+    - rpmbuild --define "_topdir $(pwd)/rpmbuild" --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" --rebuild *.src.rpm
     - echo "Build completed"
   artifacts:
     paths:
