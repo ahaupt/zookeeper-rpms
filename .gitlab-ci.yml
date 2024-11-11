@@ -6,14 +6,14 @@ build:
   stage: build
   script:
     - dnf install -y epel-release
-    - dnf install -y git-core rpm-build rpmdevtools mock
-    - rpmdev-setuptree
+    - dnf install -y git-core rpm-build rpmdevtools
+    - mkdir -p rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
     - spectool -g zookeeper.spec
     - dnf builddep -y zookeeper.spec
-    - rpmbuild -bs --nodeps --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" zookeeper.spec
+    - rpmbuild -bs --nodeps --define "_topdir $(pwd)/rpmbuild" --define "_sourcedir $(pwd)" --define "_srcrpmdir $(pwd)" zookeeper.spec
     - rpmbuild --rebuild *.src.rpm
     - echo "Build completed"
   artifacts:
     paths:
-      - "/root/rpmbuild/RPMS/noarch/*.rpm"
+      - rpmbuild/RPMS/noarch/*.rpm
     expire_in: 1 week
