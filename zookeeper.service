@@ -13,8 +13,9 @@ WorkingDirectory=/var/lib/zookeeper
 
 ExecStart=/usr/bin/java \
   -Dzookeeper.log.dir=/var/log/zookeeper \
-  -Dlog4j.configuration=file:/etc/zookeeper/log4j.properties \
+  -Dlogback.configurationFile=/etc/zookeeper/logback.xml \
   -cp /usr/lib/zookeeper/lib/* \
+  $JAVA_OPTS \
   org.apache.zookeeper.server.quorum.QuorumPeerMain \
   /etc/zookeeper/zoo.cfg
 
