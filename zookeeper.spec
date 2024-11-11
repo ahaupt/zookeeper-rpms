@@ -1,6 +1,6 @@
 %define _noarch_libdir /usr/lib
-%define rel_ver 3.5.5
-%define pkg_ver 3
+%define rel_ver 3.9.3
+%define pkg_ver 1
 
 Summary: High-performance coordination service for distributed applications.
 Name: zookeeper
@@ -13,11 +13,11 @@ BuildArch: noarch
 Source0: https://www.apache.org/dist/zookeeper/zookeeper-%{rel_ver}/apache-zookeeper-%{rel_ver}.tar.gz
 Source1: zookeeper.service
 Source2: zoo.cfg
-Source3: log4j.properties
-Source4: zookeeper.sysconfig
+Source3: zookeeper.sysconfig
+Source4: logback.xml
+BuildRequires: maven-openjdk11
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
-BuildRequires: python-devel,gcc,make,libtool,autoconf,cppunit-devel,maven,hostname,systemd
-Requires: java,nc,systemd
+Requires: (java-11-headless or java-17-headless),nc,systemd
 AutoReqProv: no
 
 %description
@@ -41,7 +41,7 @@ implementing coordination services from scratch.
 %setup -q -n apache-zookeeper-%{rel_ver}
 
 %build
-mvn -DskipTests package
+mvn -DskipTests -am -pl zookeeper-server package
 
 %install
 rm -rf %{buildroot}
@@ -53,8 +53,8 @@ cp -a zookeeper-server/target/lib %{buildroot}%{_zookeeper_noarch_libdir}
 install -p -D -m 644 zookeeper-server/target/zookeeper-%{rel_ver}.jar %{buildroot}%{_zookeeper_noarch_libdir}/lib/zookeeper-%{rel_ver}.jar
 install -p -D -m 644 %{S:1} %{buildroot}%{_unitdir}/%{name}.service
 install -p -D -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/zoo.cfg
-install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/zookeeper/log4j.properties
-install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/sysconfig/zookeeper
+install -p -D -m 644 %{S:3} %{buildroot}%{_sysconfdir}/sysconfig/zookeeper
+install -p -D -m 644 %{S:4} %{buildroot}%{_sysconfdir}/zookeeper/logback.xml
 install -p -D -m 644 conf/configuration.xsl %{buildroot}%{_sysconfdir}/zookeeper/configuration.xsl
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
@@ -93,6 +93,20 @@ exit 0
 %systemd_postun_with_restart %{name}.service
 
 %changelog
+* Mon Nov 11 2024 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- bupm zookeeper to version to 3.9.3
+* Mon Jan 31 2022 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de>
+- bupm zookeeper to version to 3.5.9
+* Fri Jan 28 2022 Tigran Mkrtchyan <tigran.mkrthyan@desy.de> - 3.5.8-3
+- apply qick fix for CVE-2022-23307
+* Tue Jun 30 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-2
+- restrict access to /usr, /etc, /boot directories
+* Wed May 27 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.8-1
+- Bump version to zookeeper version to 3.5.8
+* Thu Mar 5 2020 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.7-1
+- Bump version to zookeeper version to 3.5.7
+* Sun Nov 17 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.6-1
+- Bump version to 3.5.6
 * Fri Oct 04 2019 Tigran Mkrtchyan <tigran.mkrtchyan@desy.de> - 3.5.5-3
 - fix loading of systemd environment file
 - introduce variable to control package version
