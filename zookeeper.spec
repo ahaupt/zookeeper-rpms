@@ -15,6 +15,7 @@ Source1: zookeeper.service
 Source2: zoo.cfg
 Source3: zookeeper.sysconfig
 Source4: logback.xml
+BuildRequires: maven-openjdk11
 BuildRoot: %{_tmppath}/%{name}-%{rel_ver}-%{release}-root
 Requires: (java-11-headless or java-17-headless),nc,systemd
 AutoReqProv: no
