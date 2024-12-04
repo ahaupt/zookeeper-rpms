@@ -42,7 +42,7 @@ Publish to YUM repository:
     - tags
   stage: publish
   dependencies:
-    - package_rpm
+    - "sign rpm"
   image: almalinux:9-minimal
   script:
     - PACKAGE=$(ls -1 rpmbuild/RPMS/noarch/zookeeper-*)
